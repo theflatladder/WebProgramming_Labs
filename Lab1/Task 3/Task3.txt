@@ -1,0 +1,137 @@
+alexander@Bobby:~$ telnet 10.32.9.240 8080        подключаемся к ip
+Trying 10.32.9.240...
+Connected to 10.32.9.240.                         подключились
+Escape character is '^]'.
+GET /ip HTTP/1.1                                  просим ip
+Host: 10.32.9.240 8080
+Accept: */*
+
+HTTP/1.1 200 OK                                   информация о соединении (не только эта строка, конечно)
+Server: gunicorn/19.7.0
+Date: Sat, 16 Sep 2017 08:30:39 GMT
+Connection: close
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Content-Length: 30
+
+{
+"origin": "10.32.9.197"                           ответ на запрос - ip
+}
+Connection closed by foreign host.                соединение закрыто
+alexander@Bobby:~$ telnet 10.32.9.240 8080        подключаемся снова (!далее не буду повторять комметарии в повторяющихся строках!)
+Trying 10.32.9.240...
+Connected to 10.32.9.240.
+Escape character is '^]'.
+GET /get?foo=bar&1=2&2/0&error=True HTTP/1.1       передаем команду
+Host: 10.32.9.240
+Accept: */*
+
+HTTP/1.1 200 OK
+Server: gunicorn/19.7.0
+Date: Sat, 16 Sep 2017 08:31:15 GMT
+Connection: close
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Content-Length: 252
+
+{                                                       ответ на наш запрос:
+"args": {                                               аргументы, которые мы указали в команде
+"1": "2", 
+"2/0": "", 
+"error": "True", 
+"foo": "bar"
+}, 
+"headers": {
+"Accept": "*/*", 
+"Host": "10.32.9.240"
+}, 
+"origin": "10.32.9.197", 
+"url": "http://10.32.9.240/get?foo=bar&1=2&2%2F0&error=True"
+}
+Connection closed by foreign host.
+alexander@Bobby:~$ telnet 10.32.9.240 8080
+Trying 10.32.9.240...
+Connected to 10.32.9.240.
+Escape character is '^]'.
+POST /post HTTP/1.1                          используем команду post
+Host: httpbin.og
+Accept: */*
+Content-Length: 29                           длина - 29
+Content-Type: application/x-www-form-urlencoded
+
+foo=bar&1=2&2%2F0=&error=True                 также отправляем аргументы
+HTTP/1.1 200 OK
+Server: gunicorn/19.7.0
+Date: Sat, 16 Sep 2017 08:31:46 GMT
+Connection: close
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Content-Length: 372
+
+{                     ответ сервера
+"args": {}, 
+"data": "", 
+"files": {}, 
+"form": {
+"1": "2", 
+"2/0": "", 
+"error": "True", 
+"foo": "bar"
+}, 
+"headers": {
+"Accept": "*/*", 
+"Content-Length": "29", 
+"Content-Type": "application/x-www-form-urlencoded", 
+"Host": "httpbin.og"
+}, 
+"json": null, 
+"origin": "10.32.9.197", 
+"url": "http://httpbin.og/post"
+}
+Connection closed by foreign host.
+alexander@Bobby:~$ telnet 10.32.9.240 8080
+Trying 10.32.9.240...
+Connected to 10.32.9.240.
+Escape character is '^]'.
+GET /cookies/set?country=RU HTTP/1.1      используем команду cookies с указанием страны - Россия
+Host: httpbin.org
+Accept: */*
+
+HTTP/1.1 302 FOUND
+Server: gunicorn/19.7.0
+Date: Sat, 16 Sep 2017 08:32:06 GMT
+Connection: close
+Content-Type: text/html; charset=utf-8
+Content-Length: 223
+Location: /cookies
+Set-Cookie: country=RU; Path=/
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">         в качестве ответа мы получаем страницу перенаправления
+<title>Redirecting...</title>
+<h1>Redirecting...</h1>
+<p>You should be redirected automatically to target URL: <a href="/cookies">/cookies</a>. If not click the link.Connection closed by foreign host.
+alexander@Bobby:~$ telnet 10.32.9.240 8080
+Trying 10.32.9.240...
+Connected to 10.32.9.240.
+Escape character is '^]'.
+GET /cookies HTTP/1.1                       и далее переходим на страницу, которая указана в предыдущем ответе
+Host: httpbin.org
+Accept: */*
+
+HTTP/1.1 200 OK
+Server: gunicorn/19.7.0
+Date: Sat, 16 Sep 2017 08:32:27 GMT
+Connection: close
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Content-Length: 20
+
+{
+"cookies": {}                               ответ сервера
+}
