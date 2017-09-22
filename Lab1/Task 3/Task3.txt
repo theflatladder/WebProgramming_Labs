@@ -19,6 +19,11 @@ Content-Length: 30
 "origin": "10.32.9.197"                           ответ на запрос - ip
 }
 Connection closed by foreign host.                соединение закрыто
+
+
+
+
+
 alexander@Bobby:~$ telnet 10.32.9.240 8080        подключаемся снова (!далее не буду повторять комметарии в повторяющихся строках!)
 Trying 10.32.9.240...
 Connected to 10.32.9.240.
@@ -47,10 +52,16 @@ Content-Length: 252
 "Accept": "*/*", 
 "Host": "10.32.9.240"
 }, 
-"origin": "10.32.9.197", 
+"origin": "10.32.9.197",                                                        также ip и ссылка
 "url": "http://10.32.9.240/get?foo=bar&1=2&2%2F0&error=True"
 }
 Connection closed by foreign host.
+
+
+
+
+
+
 alexander@Bobby:~$ telnet 10.32.9.240 8080
 Trying 10.32.9.240...
 Connected to 10.32.9.240.
@@ -91,12 +102,17 @@ Content-Length: 372
 "origin": "10.32.9.197", 
 "url": "http://httpbin.og/post"
 }
-Connection closed by foreign host.
+Connection closed by foreign host.                  успешно заменили данные на сервере своими
+
+
+
+
+
 alexander@Bobby:~$ telnet 10.32.9.240 8080
 Trying 10.32.9.240...
 Connected to 10.32.9.240.
 Escape character is '^]'.
-GET /cookies/set?country=RU HTTP/1.1      используем команду cookies с указанием страны - Россия
+GET /cookies/set?country=RU HTTP/1.1
 Host: httpbin.org
 Accept: */*
 
