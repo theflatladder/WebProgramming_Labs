@@ -1,3 +1,5 @@
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
 alexander@Bobby:~$ telnet wikipedia.org 80            подключаюсь к вики
 Trying 91.198.174.192...
 Connected to wikipedia.org.                           подключился
