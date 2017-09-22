@@ -6,7 +6,7 @@ GET /ip HTTP/1.1                                  просим ip
 Host: 10.32.9.240 8080
 Accept: */*
 
-HTTP/1.1 200 OK                                   информация о соединении (не только эта строка, конечно)
+HTTP/1.1 200 OK                                   запрос успешен
 Server: gunicorn/19.7.0
 Date: Sat, 16 Sep 2017 08:30:39 GMT
 Connection: close
@@ -28,7 +28,7 @@ alexander@Bobby:~$ telnet 10.32.9.240 8080        подключаемся сн�
 Trying 10.32.9.240...
 Connected to 10.32.9.240.
 Escape character is '^]'.
-GET /get?foo=bar&1=2&2/0&error=True HTTP/1.1       передаем команду
+GET /get?foo=bar&1=2&2/0&error=True HTTP/1.1       обращаемся к ресурсу с параметрами
 Host: 10.32.9.240
 Accept: */*
 
@@ -42,7 +42,7 @@ Access-Control-Allow-Credentials: true
 Content-Length: 252
 
 {                                                       ответ на наш запрос:
-"args": {                                               аргументы, которые мы указали в команде
+"args": {                                               параметры, которые мы указали в команде
 "1": "2", 
 "2/0": "", 
 "error": "True", 
@@ -102,9 +102,9 @@ Content-Length: 372
 "origin": "10.32.9.197", 
 "url": "http://httpbin.og/post"
 }
-Connection closed by foreign host.                  успешно заменили данные на сервере своими
+Connection closed by foreign host.
 
-
+                                                           успешно передали параметры с помощью post
 
 
 
@@ -116,7 +116,7 @@ GET /cookies/set?country=RU HTTP/1.1
 Host: httpbin.org
 Accept: */*
 
-HTTP/1.1 302 FOUND
+HTTP/1.1 302 FOUND                                      запрошеный документ доступен по другому адресу
 Server: gunicorn/19.7.0
 Date: Sat, 16 Sep 2017 08:32:06 GMT
 Connection: close
@@ -131,6 +131,10 @@ Access-Control-Allow-Credentials: true
 <title>Redirecting...</title>
 <h1>Redirecting...</h1>
 <p>You should be redirected automatically to target URL: <a href="/cookies">/cookies</a>. If not click the link.Connection closed by foreign host.
+
+
+
+
 alexander@Bobby:~$ telnet 10.32.9.240 8080
 Trying 10.32.9.240...
 Connected to 10.32.9.240.
@@ -139,7 +143,7 @@ GET /cookies HTTP/1.1                       и далее переходим н�
 Host: httpbin.org
 Accept: */*
 
-HTTP/1.1 200 OK
+HTTP/1.1 200 OK                             в этот раз запрос успешен (по сравнению с предыдущим)
 Server: gunicorn/19.7.0
 Date: Sat, 16 Sep 2017 08:32:27 GMT
 Connection: close
@@ -151,3 +155,32 @@ Content-Length: 20
 {
 "cookies": {}                               ответ сервера
 }
+
+
+
+
+alexander@Bobby:~$ telnet httpbin.org 80
+Trying 54.225.192.161...
+Connected to httpbin.org.
+Escape character is '^]'.
+GET /redirect/4 HTTP/1.1
+Host: httpbin.org
+Accept: */*
+
+HTTP/1.1 302 FOUND                                то же самое, что два запроса назад
+Connection: keep-alive
+Server: meinheld/0.6.1
+Date: Sat, 16 Sep 2017 14:23:54 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 247
+Location: /relative-redirect/3
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+X-Powered-By: Flask
+X-Processed-Time: 0.000787973403931
+Via: 1.1 vegur
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>Redirecting...</title>
+<h1>Redirecting...</h1>
+<p>You should be redirected automatically to target URL: <a href="/relative-redirect/3">/relative-redirect/3</a>.  If not click the link.
